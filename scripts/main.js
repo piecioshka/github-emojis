@@ -1,7 +1,14 @@
 async function fetchEmojies() {
   const response = await fetch("https://api.github.com/emojis");
-  const data = await response.json();
-  return data;
+  return await response.json();
+}
+
+function showLoader() {
+  const loader = document.createElement("p");
+  loader.classList.add("loader");
+  loader.textContent = "Loading emojies...";
+  const $controls = document.querySelector("#controls");
+  $controls?.appendChild(loader);
 }
 
 function hideLoader() {
@@ -10,13 +17,10 @@ function hideLoader() {
 }
 
 function clearEmojies() {
-  const outlet = document.querySelector(".github-emojies");
-  if (!outlet) {
-    throw new Error("Element with class 'github-emojies' not found");
-  }
+  const $outlet = document.querySelector("#outlet");
 
-  while (outlet.firstChild) {
-    outlet.removeChild(outlet.firstChild);
+  while ($outlet?.firstChild) {
+    $outlet.removeChild($outlet.firstChild);
   }
 }
 
@@ -36,11 +40,7 @@ function renderEmoji(url, name) {
 }
 
 function renderEmojiesList(data) {
-  const outlet = document.querySelector(".github-emojies");
-  if (!outlet) {
-    throw new Error("Element with class 'github-emojies' not found");
-  }
-
+  const $outlet = document.querySelector("#outlet");
   const table = document.createElement("table");
   const thead = document.createElement("thead");
   const tr = document.createElement("tr");
@@ -65,15 +65,11 @@ function renderEmojiesList(data) {
   }
 
   table.appendChild(tbody);
-  outlet.appendChild(table);
+  $outlet?.appendChild(table);
 }
 
 function renderEmojiesGrid(data) {
-  const outlet = document.querySelector(".github-emojies");
-  if (!outlet) {
-    throw new Error("Element with class 'github-emojies' not found");
-  }
-
+  const $outlet = document.querySelector("#outlet");
   const list = document.createElement("ul");
 
   for (const [name, url] of Object.entries(data)) {
@@ -83,14 +79,14 @@ function renderEmojiesGrid(data) {
     list.appendChild(item);
   }
 
-  outlet.appendChild(list);
+  $outlet?.appendChild(list);
 }
 
 function renderEmptyState() {
-  const outlet = document.querySelector(".github-emojies");
+  const $outlet = document.querySelector("#outlet");
   const message = document.createElement("p");
   message.textContent = "No emojies found.";
-  outlet.appendChild(message);
+  $outlet?.appendChild(message);
 }
 
 function filterEmojies(data, query) {
@@ -103,11 +99,73 @@ function filterEmojies(data, query) {
   return filtered;
 }
 
-function getLayout() {
+function getStoredLayout() {
   return localStorage.getItem("layout") || "grid";
 }
 
+function renderLayoutButtons() {
+  const container = document.createElement("p");
+  container.classList.add("layout-buttons");
+  container.textContent = "Layout: ";
+
+  const gridButton = document.createElement("button");
+  gridButton.classList.add("view-mode-button", "view-grid");
+  gridButton.textContent = "Grid";
+  container.appendChild(gridButton);
+
+  container.appendChild(document.createTextNode(" | "));
+
+  const listButton = document.createElement("button");
+  listButton.classList.add("view-mode-button", "view-list");
+  listButton.textContent = "List";
+  container.appendChild(listButton);
+
+  const $controls = document.querySelector("#controls");
+  $controls?.appendChild(container);
+}
+
+function renderFilterInput() {
+  const container = document.createElement("p");
+  container.classList.add("filter-input");
+  container.textContent = "Filter: ";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.id = "emoji-filter";
+  input.placeholder = "Type name...";
+  input.autofocus = true;
+
+  container.appendChild(input);
+
+  const $controls = document.querySelector("#controls");
+  $controls?.appendChild(container);
+}
+
+function clearStatus() {
+  const $status = document.querySelector("#status");
+
+  while ($status?.firstChild) {
+    $status.removeChild($status.firstChild);
+  }
+}
+
+/**
+ * @param {number} count
+ */
+function renderStatus(count) {
+  const container = document.createElement("p");
+  container.classList.add("status");
+  container.innerHTML = `<em>Status: ${count} emojies loaded.</em>`;
+  const $status = document.querySelector("#status");
+  $status?.appendChild(container);
+}
+
 async function main() {
+  console.log("App started");
+  renderLayoutButtons();
+  renderFilterInput();
+  showLoader();
+
   const data = await fetchEmojies();
   hideLoader();
 
@@ -115,11 +173,15 @@ async function main() {
   const gridButton = document.querySelector(".view-grid");
   const filterInput = document.querySelector("#emoji-filter");
 
+  /**
+   * @param {string} type
+   */
   function renderView(type) {
-    const query = filterInput.value.trim().replace(/:/g, "").toLowerCase();
+    const query = filterInput?.value.trim().replace(/:/g, "").toLowerCase();
     const filteredData = filterEmojies(data, query);
 
     clearEmojies();
+    clearStatus();
 
     if (Object.keys(filteredData).length === 0) {
       renderEmptyState();
@@ -129,29 +191,52 @@ async function main() {
     if (type === "grid") {
       renderEmojiesGrid(filteredData);
       localStorage.setItem("layout", "grid");
-      gridButton.classList.add("active");
-      listButton.classList.remove("active");
+      gridButton?.classList.add("active");
+      listButton?.classList.remove("active");
     } else {
       renderEmojiesList(filteredData);
       localStorage.setItem("layout", "list");
-      listButton.classList.add("active");
-      gridButton.classList.remove("active");
+      listButton?.classList.add("active");
+      gridButton?.classList.remove("active");
     }
+
+    renderStatus(Object.keys(filteredData).length);
   }
 
-  renderView(getLayout());
+  renderView(getStoredLayout());
 
-  listButton.addEventListener("click", () => {
+  listButton?.addEventListener("click", () => {
     renderView("list");
   });
 
-  gridButton.addEventListener("click", () => {
+  gridButton?.addEventListener("click", () => {
     renderView("grid");
   });
 
-  filterInput.addEventListener("input", () => {
-    renderView(getLayout());
+  filterInput?.addEventListener("input", () => {
+    renderView(getStoredLayout());
   });
 }
 
-Docsify.dom.documentReady(main);
+/**
+ * @param {string[]} selectors
+ * @returns {boolean}
+ */
+function isLoaded(selectors) {
+  return selectors.every((selector) => document.querySelector(selector));
+}
+
+/**
+ * @param {Function} callback
+ */
+function bootstrap(callback) {
+  const interval = setInterval(() => {
+    if (isLoaded(["#controls", "#outlet"])) {
+      console.log("All elements loaded");
+      clearInterval(interval);
+      callback();
+    }
+  }, 100);
+}
+
+bootstrap(main);

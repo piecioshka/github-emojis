@@ -2,10 +2,8 @@
 
 _List based on GitHub API - https://api.github.com/emojis_
 
-Layout: <button class="view-mode-button view-grid">Grid</button> | <button class="view-mode-button view-list">List</button>
-<br/>
-Filter: <input type="text" id="emoji-filter" placeholder="Type name..." autofocus/>
+<div id="controls"></div>
 
-<p class="loader">Loading emojies...</p>
+<div id="outlet"></div>
 
-<div class="github-emojies"></div>
+<div id="status"></div>

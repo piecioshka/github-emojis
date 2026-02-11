@@ -1,13 +1,13 @@
-.github-emojies thead {
-  background-color: #f5f5f5;
+/* Controls */
+
+#controls {
+  margin-bottom: 20px;
 }
-.github-emojies ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+
+#controls p {
+  margin: 0;
 }
+
 .emoji-button,
 .view-mode-button {
   cursor: pointer;
@@ -23,6 +23,21 @@
   font-weight: bold;
   text-decoration: underline;
 }
+
+/* Outlet */
+
+#outlet thead {
+  background-color: #f5f5f5;
+}
+#outlet ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .emoji-button {
   border: 1px solid transparent;
   border-radius: 4px;

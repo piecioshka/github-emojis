@@ -7,3 +7,7 @@ _List based on GitHub API - https://api.github.com/emojis_
 <div id="outlet"></div>
 
 <div id="status"></div>
+
+## License
+
+[The MIT License](http://piecioshka.mit-license.org) @ 2026

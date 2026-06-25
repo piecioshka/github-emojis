@@ -10,4 +10,4 @@ _List based on GitHub API - https://api.github.com/emojis_
 
 ## License
 
-[The MIT License](http://piecioshka.mit-license.org) @ 2026
+[The MIT License](https://piecioshka.mit-license.org) @ 2026

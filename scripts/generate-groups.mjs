@@ -11,7 +11,14 @@ const IGNORED_CODEPOINTS = ["fe0f", "200d"];
 const SKIN_TONES = ["1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff"];
 const SKIPPED_GROUPS = ["Component"];
 // Unicode subgroups promoted to separate groups
-const PROMOTED_SUBGROUPS = { heart: "Hearts" };
+const PROMOTED_SUBGROUPS = {
+  heart: "Hearts",
+  "hand-fingers-open": "Hands",
+  "hand-fingers-partial": "Hands",
+  "hand-single-finger": "Hands",
+  "hand-fingers-closed": "Hands",
+  hands: "Hands",
+};
 
 /**
  * Keep in sync with normalizeCodepoints() in scripts/main.js

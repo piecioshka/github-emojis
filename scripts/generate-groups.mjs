@@ -19,6 +19,31 @@ const PROMOTED_SUBGROUPS = {
   "hand-fingers-closed": "Hands",
   hands: "Hands",
 };
+// Single emojis (normalized codepoints) promoted to separate groups
+const PROMOTED_EMOJIS = {
+  "270d": "Hands", // writing hand
+  "1f4aa": "Hands", // flexed biceps
+  "1f9be": "Hands", // mechanical arm
+  "1f9b5": "Legs & Feet", // leg
+  "1f9b6": "Legs & Feet", // foot
+  "1f9bf": "Legs & Feet", // mechanical leg
+  "1f463": "Legs & Feet", // footprints
+};
+// Groups not listed here land at the end
+const GROUP_ORDER = [
+  "Smileys & Emotion",
+  "Hearts",
+  "Hands",
+  "Legs & Feet",
+  "People & Body",
+  "Animals & Nature",
+  "Food & Drink",
+  "Travel & Places",
+  "Activities",
+  "Objects",
+  "Symbols",
+  "Flags",
+];
 
 /**
  * Keep in sync with normalizeCodepoints() in scripts/main.js
@@ -65,14 +90,27 @@ function parseGroups(text) {
       const key = normalizeCodepoints(codepoints);
 
       if (!hasSkinTone && !seen.has(key)) {
+        const target = PROMOTED_EMOJIS[key] || current;
         seen.add(key);
-        groups[current] = groups[current] || [];
-        groups[current].push(key);
+        groups[target] = groups[target] || [];
+        groups[target].push(key);
       }
     }
   }
 
-  return groups;
+  return sortGroups(groups);
+}
+
+/**
+ * @param {Record<string, string[]>} groups
+ * @returns {Record<string, string[]>}
+ */
+function sortGroups(groups) {
+  const names = [
+    ...GROUP_ORDER.filter((name) => name in groups),
+    ...Object.keys(groups).filter((name) => !GROUP_ORDER.includes(name)),
+  ];
+  return Object.fromEntries(names.map((name) => [name, groups[name]]));
 }
 
 const response = await fetch(SOURCE_URL);

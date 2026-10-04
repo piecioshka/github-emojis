@@ -10,6 +10,8 @@ const OUTPUT_FILE = new URL("../data/groups.json", import.meta.url);
 const IGNORED_CODEPOINTS = ["fe0f", "200d"];
 const SKIN_TONES = ["1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff"];
 const SKIPPED_GROUPS = ["Component"];
+// Unicode subgroups promoted to separate groups
+const PROMOTED_SUBGROUPS = { heart: "Hearts" };
 
 /**
  * Keep in sync with normalizeCodepoints() in scripts/main.js
@@ -31,13 +33,21 @@ function normalizeCodepoints(codepoints) {
 function parseGroups(text) {
   const groups = {};
   const seen = new Set();
+  let group = null;
   let current = null;
 
   for (const line of text.split("\n")) {
     const groupMatch = line.match(/^# group: (.+)$/);
 
     if (groupMatch) {
-      current = SKIPPED_GROUPS.includes(groupMatch[1]) ? null : groupMatch[1];
+      group = SKIPPED_GROUPS.includes(groupMatch[1]) ? null : groupMatch[1];
+      current = group;
+    }
+
+    const subgroupMatch = line.match(/^# subgroup: (.+)$/);
+
+    if (group && subgroupMatch) {
+      current = PROMOTED_SUBGROUPS[subgroupMatch[1]] || group;
     }
 
     const emojiMatch = line.match(/^([0-9A-F ]+?)\s*;/);

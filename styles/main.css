@@ -53,3 +53,27 @@
   width: 32px;
   height: 32px;
 }
+
+/* Groups */
+
+.group-buttons {
+  line-height: 1.8;
+}
+.group-button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.group-button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.group-button:not(:disabled):hover,
+.group-button.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+#outlet .group-heading {
+  margin: 30px 0 10px;
+}

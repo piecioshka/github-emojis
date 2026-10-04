@@ -9,16 +9,34 @@ async function fetchEmojis() {
 }
 
 /**
- * @returns {Promise<Record<string, string[]>>} Unicode group -> codepoints
+ * @param {string} url
+ * @returns {Promise<Record<string, string[]>>}
  */
-async function fetchGroups() {
+async function fetchData(url) {
   try {
-    const response = await fetch("data/groups.json");
+    const response = await fetch(url);
     return await response.json();
   } catch (error) {
-    console.error("Cannot load emoji groups", error);
+    console.error(`Cannot load ${url}`, error);
     return {};
   }
+}
+
+/**
+ * @returns {Promise<Record<string, string[]>>} Unicode group -> codepoints
+ */
+function fetchGroups() {
+  return fetchData("data/groups.json");
+}
+
+/**
+ * Collections are hand-picked lists of emojis, which (unlike groups)
+ * do not take emojis away from their Unicode groups.
+ *
+ * @returns {Promise<Record<string, string[]>>} collection -> emoji names
+ */
+function fetchCollections() {
+  return fetchData("data/collections.json");
 }
 
 function showLoader() {
@@ -183,6 +201,21 @@ function groupEmojis(data, groupNames, lookup) {
   return grouped;
 }
 
+/**
+ * @param {Record<string, string>} data
+ * @param {string[]} names
+ * @returns {Record<string, string>} emojis in the order of given names
+ */
+function pickEmojis(data, names) {
+  const picked = {};
+  for (const name of names) {
+    if (name in data) {
+      picked[name] = data[name];
+    }
+  }
+  return picked;
+}
+
 function getStoredGroup() {
   return localStorage.getItem("group") || GROUP_ALL;
 }
@@ -288,7 +321,11 @@ async function main() {
   renderGroupButtonsContainer();
   showLoader();
 
-  const [data, groups] = await Promise.all([fetchEmojis(), fetchGroups()]);
+  const [data, groups, collections] = await Promise.all([
+    fetchEmojis(),
+    fetchGroups(),
+    fetchCollections(),
+  ]);
   hideLoader();
 
   const lookup = buildGroupLookup(groups);
@@ -316,21 +353,21 @@ async function main() {
   function renderView(type) {
     const query = filterInput?.value.trim().replace(/:/g, "").toLowerCase();
     const filteredData = filterEmojis(data, query);
-    const grouped = groupEmojis(filteredData, groupNames, lookup);
-    const storedGroup = getStoredGroup();
-    const activeGroup = groupNames.includes(storedGroup)
-      ? storedGroup
-      : GROUP_ALL;
-    const visibleGroups = groupNames.filter(
-      (group) =>
-        (activeGroup === GROUP_ALL || activeGroup === group) &&
-        Object.keys(grouped[group]).length > 0,
-    );
-
-    const counts = { [GROUP_ALL]: Object.keys(filteredData).length };
-    for (const group of groupNames) {
-      counts[group] = Object.keys(grouped[group]).length;
+    const sections = { [GROUP_ALL]: filteredData };
+    for (const [collection, names] of Object.entries(collections)) {
+      sections[collection] = pickEmojis(filteredData, names);
     }
+    Object.assign(sections, groupEmojis(filteredData, groupNames, lookup));
+
+    const counts = {};
+    for (const [section, emojis] of Object.entries(sections)) {
+      counts[section] = Object.keys(emojis).length;
+    }
+
+    const storedGroup = getStoredGroup();
+    const activeGroup = storedGroup in sections ? storedGroup : GROUP_ALL;
+    const candidates = activeGroup === GROUP_ALL ? groupNames : [activeGroup];
+    const visibleGroups = candidates.filter((group) => counts[group] > 0);
 
     clearEmojis();
     clearStatus();
@@ -349,9 +386,9 @@ async function main() {
       renderGroupHeading(group, counts[group]);
 
       if (type === "grid") {
-        renderEmojisGrid(grouped[group]);
+        renderEmojisGrid(sections[group]);
       } else {
-        renderEmojisList(grouped[group]);
+        renderEmojisList(sections[group]);
       }
     }
 

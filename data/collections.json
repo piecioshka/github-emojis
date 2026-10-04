@@ -1,0 +1,18 @@
+{
+  "Bullets": [
+    "white_check_mark", "heavy_check_mark", "ballot_box_with_check", "x", "negative_squared_cross_mark", "heavy_multiplication_x",
+    "heavy_plus_sign", "heavy_minus_sign", "+1", "-1",
+    "arrow_right", "arrow_forward", "arrow_right_hook", "point_right", "arrow_upper_right", "arrow_lower_right", "arrow_up", "arrow_down",
+    "small_blue_diamond", "small_orange_diamond", "large_blue_diamond", "large_orange_diamond", "diamond_shape_with_a_dot_inside",
+    "small_red_triangle", "small_red_triangle_down",
+    "red_circle", "orange_circle", "yellow_circle", "green_circle", "large_blue_circle", "purple_circle", "brown_circle", "black_circle", "white_circle", "radio_button", "o",
+    "red_square", "orange_square", "yellow_square", "green_square", "blue_square", "purple_square", "brown_square", "black_large_square", "white_large_square",
+    "black_medium_square", "white_medium_square", "black_medium_small_square", "white_medium_small_square", "black_small_square", "white_small_square",
+    "black_square_button", "white_square_button",
+    "star", "star2", "sparkles", "sparkle", "eight_spoked_asterisk", "eight_pointed_black_star", "zap", "fire",
+    "exclamation", "grey_exclamation", "question", "grey_question", "bangbang", "interrobang", "warning", "no_entry", "no_entry_sign", "information_source",
+    "pushpin", "round_pushpin", "bulb", "memo", "link", "bookmark", "label", "bell", "mag", "lock", "gear", "wrench", "hammer", "package", "books",
+    "rocket", "bug", "construction", "tada", "dart", "trophy", "gem", "eyes", "speech_balloon", "triangular_flag_on_post", "checkered_flag",
+    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "keycap_ten"
+  ]
+}

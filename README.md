@@ -10,6 +10,10 @@ _List based on GitHub API - https://api.github.com/emojis_
 
 <div id="status"></div>
 
+## Contributing
+
+See [CONTRIBUTING.md](https://github.com/piecioshka/github-emojis/blob/main/CONTRIBUTING.md).
+
 ## License
 
 [The MIT License](https://piecioshka.mit-license.org) @ 2026

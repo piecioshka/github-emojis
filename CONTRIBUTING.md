@@ -18,16 +18,16 @@ docsify fetches `README.md` over HTTP, so opening `index.html` from disk does no
 
 ## Project structure
 
-| Path                          | What it holds                                                  |
-| ----------------------------- | -------------------------------------------------------------- |
-| `index.html`                  | docsify setup                                                  |
-| `README.md`                   | page content with the placeholders filled by `scripts/main.js` |
-| `scripts/main.js`             | fetching emojis, grouping, controls and rendering              |
-| `scripts/generate-groups.mjs` | generator of `data/groups.json`                                |
-| `styles/main.css`             | page styles                                                    |
-| `data/groups.json`            | generated Unicode groups                                       |
-| `data/collections.json`       | hand-picked collections                                        |
-| `favicon/`, `screenshots/`    | icons and the README screenshot                                |
+| Path                            | What it holds                                                  |
+| ------------------------------- | -------------------------------------------------------------- |
+| `index.html`                    | docsify setup                                                  |
+| `README.md`                     | page content with the placeholders filled by `scripts/main.js` |
+| `scripts/main.js`               | fetching emojis, grouping, controls and rendering              |
+| `scripts/generate-groups.mjs`   | generator of `data/groups.json`                                |
+| `styles/main.css`               | page styles                                                    |
+| `data/groups.json`              | generated Unicode groups                                       |
+| `data/collections.json`         | hand-picked collections                                        |
+| `favicon/`, `docs/screenshots/` | icons and the README screenshot                                |
 
 ## Emoji groups
 

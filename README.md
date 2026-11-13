@@ -2,7 +2,7 @@
 
 _List based on GitHub API - https://api.github.com/emojis_
 
-<p class="github-only"><a href="https://piecioshka.github.io/github-emojis/"><img src="screenshots/app.png" alt="Screenshot of GitHub Emojis" loading="lazy" /></a></p>
+<p class="github-only"><a href="https://piecioshka.github.io/github-emojis/"><img src="docs/screenshots/app.png" alt="Screenshot of GitHub Emojis" loading="lazy" /></a></p>
 
 <div id="controls"></div>
 
